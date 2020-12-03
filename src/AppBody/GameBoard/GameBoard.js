@@ -1,32 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import style from './Sapper.module.css';
+import style from './GameBoard.module.css';
 import flagImg from './../../assets/flag.png'
 
 
-const Sapper = (props) => {
+const GameBoard = (props) => {
 
   const [board, setBoard] = useState([])
-  const [playerBoard, setPlayerBoard] = useState([])
+  const [playerBoard, setPlayerBoard] = useState([]) //player see this board
   const [flags, setFlag] = useState()
   const [bombs, setBombs] = useState()
-  const [numberArea, setNumberArea] = useState('')
+  const [infoBoard, setInfoBoard] = useState('')
 
   let boardCopy = []
   const generateboard = () => {
     let emptyArr = generateEmptyArr()
-    setPlayerBoard([...emptyArr])
+    setPlayerBoard([...emptyArr]) //clearing a playerboard view
     setBoard([])
-    generateBombs()
-    generateHintsOfBombs()
+    generateBombs() 
+    generateHintsOfBombs() 
   }
 
+  //generate number of bombs and flags. Put them on board
   const generateBombs = () => {
     let bombsCount = 0;
     for (let i = 0; i < 10; i++) {
       let newArr = []
       for (let j = 0; j < 10; j++) {
         let random = Math.random()
-        if (random <= 0.15) {
+        if (random <= 0.10) {
           newArr = [...newArr, 'B']
           bombsCount += 1
         } else {
@@ -39,6 +40,7 @@ const Sapper = (props) => {
     setFlag(bombsCount)
   }
 
+  //generate numbers around bombs
   const generateHintsOfBombs = () => {
     let newboardCopy = [...boardCopy]
     for (let i = 0; i < newboardCopy.length; i++) {
@@ -100,7 +102,8 @@ const Sapper = (props) => {
     }
     setBoard([...newboardCopy])
   }
-
+  
+  
   const generateEmptyArr = () => {
     let newArr = []
     let newBigArr = []
@@ -115,6 +118,7 @@ const Sapper = (props) => {
     return emptyArr
   }
 
+// check surroundings of opened tiled
   const openTile = (event) => {
     let tileCoord = []
     tileCoord = [String(event.target.name), ...tileCoord]
@@ -130,21 +134,25 @@ const Sapper = (props) => {
           if (boardCopy[i + 1][j] === 0 && playerBoardCopy[i + 1][j] !== 'C') { tileCoord = [String(i + 1) + String(j), ...tileCoord] }
           if (typeof boardCopy[i][j + 1] === 'number') { if (playerBoardCopy[i][j + 1] === '') { playerBoardCopy[i][j + 1] = 'C' } }
           if (typeof boardCopy[i + 1][j] === 'number') { if (playerBoardCopy[i + 1][j] === '') { playerBoardCopy[i + 1][j] = 'C' } }
+          if (boardCopy[i+1][j + 1] > 0) { if (playerBoardCopy[i+1][j + 1] === '') { playerBoardCopy[i+1][j + 1] = 'C' } }
         } else if (i === 0 && j === 9) {
           if (boardCopy[i][j - 1] === 0 && playerBoardCopy[i][j - 1] !== 'C') { tileCoord = [String(i) + String(j - 1), ...tileCoord] }
           if (boardCopy[i + 1][j] === 0 && playerBoardCopy[i + 1][j] !== 'C') { tileCoord = [String(i + 1) + String(j), ...tileCoord] }
           if (typeof boardCopy[i + 1][j] === 'number') { if (playerBoardCopy[i + 1][j] === '') { playerBoardCopy[i + 1][j] = 'C' } }
           if (typeof boardCopy[i][j - 1] === 'number') { if (playerBoardCopy[i][j - 1] === '') { playerBoardCopy[i][j - 1] = 'C' } }
+          if (boardCopy[i + 1][j-1] > 0) { if (playerBoardCopy[i + 1][j-1] === '') { playerBoardCopy[i + 1][j-1] = 'C' } }
         } else if (i === 9 && j === 0) {
           if (boardCopy[i - 1][j] === 0 && playerBoardCopy[i - 1][j] !== 'C') { tileCoord = [String(i - 1) + String(j), ...tileCoord] }
           if (boardCopy[i][j + 1] === 0 && playerBoardCopy[i][j + 1] !== 'C') { tileCoord = [String(i) + String(j + 1), ...tileCoord] }
           if (typeof boardCopy[i - 1][j] === 'number') { if (playerBoardCopy[i - 1][j] === '') { playerBoardCopy[i - 1][j] = 'C' } }
           if (typeof boardCopy[i][j + 1] === 'number') { if (playerBoardCopy[i][j + 1] === '') { playerBoardCopy[i][j + 1] = 'C' } }
+          if (boardCopy[i-1][j+1] > 0) { if (playerBoardCopy[i-1][j+1] === '') { playerBoardCopy[i-1][j+1] = 'C' } }
         } else if (i === 9 && j === 9) {
           if (boardCopy[i - 1][j] === 0 && playerBoardCopy[i - 1][j] !== 'C') { tileCoord = [String(i - 1) + String(j), ...tileCoord] }
           if (boardCopy[i][j - 1] === 0 && playerBoardCopy[i][j - 1] !== 'C') { tileCoord = [String(i) + String(j - 1), ...tileCoord] }
           if (typeof boardCopy[i][j - 1] === 'number') { if (playerBoardCopy[i][j - 1] === '') { playerBoardCopy[i][j - 1] = 'C' } }
           if (typeof boardCopy[i - 1][j] === 'number') { if (playerBoardCopy[i - 1][j] === '') { playerBoardCopy[i - 1][j] = 'C' } }
+          if (boardCopy[i - 1][j-1] > 0) { if (playerBoardCopy[i - 1][j-1] === '') { playerBoardCopy[i - 1][j-1] = 'C' } }
         } else if (i === 0) {
           if (boardCopy[i][j - 1] === 0 && playerBoardCopy[i][j - 1] !== 'C') { tileCoord = [String(i) + String(j - 1), ...tileCoord] }
           if (boardCopy[i][j + 1] === 0 && playerBoardCopy[i][j + 1] !== 'C') { tileCoord = [String(i) + String(j + 1), ...tileCoord] }
@@ -152,6 +160,8 @@ const Sapper = (props) => {
           if (typeof boardCopy[i][j + 1] === 'number') { if (playerBoardCopy[i][j + 1] === '') { playerBoardCopy[i][j + 1] = 'C' } }
           if (typeof boardCopy[i + 1][j] === 'number') { if (playerBoardCopy[i + 1][j] === '') { playerBoardCopy[i + 1][j] = 'C' } }
           if (typeof boardCopy[i][j - 1] === 'number') { if (playerBoardCopy[i][j - 1] === '') { playerBoardCopy[i][j - 1] = 'C' } }
+          if (boardCopy[i + 1][j-1] > 0) { if (playerBoardCopy[i + 1][j-1] === '') { playerBoardCopy[i + 1][j-1] = 'C' } }
+          if (boardCopy[i+1][j + 1] > 0) { if (playerBoardCopy[i+1][j + 1] === '') { playerBoardCopy[i+1][j + 1] = 'C' } }
         } else if (j === 9) {
           if (boardCopy[i - 1][j] === 0 && playerBoardCopy[i - 1][j] !== 'C') { tileCoord = [String(i - 1) + String(j), ...tileCoord] }
           if (boardCopy[i][j - 1] === 0 && playerBoardCopy[i][j - 1] !== 'C') { tileCoord = [String(i) + String(j - 1), ...tileCoord] }
@@ -159,6 +169,8 @@ const Sapper = (props) => {
           if (typeof boardCopy[i - 1][j] === 'number') { if (playerBoardCopy[i - 1][j] === '') { playerBoardCopy[i - 1][j] = 'C' } }
           if (typeof boardCopy[i + 1][j] === 'number') { if (playerBoardCopy[i + 1][j] === '') { playerBoardCopy[i + 1][j] = 'C' } }
           if (typeof boardCopy[i][j - 1] === 'number') { if (playerBoardCopy[i][j - 1] === '') { playerBoardCopy[i][j - 1] = 'C' } }
+          if (boardCopy[i - 1][j-1] > 0) { if (playerBoardCopy[i - 1][j-1] === '') { playerBoardCopy[i - 1][j-1] = 'C' } }
+          if (boardCopy[i + 1][j-1] > 0) { if (playerBoardCopy[i + 1][j-1] === '') { playerBoardCopy[i + 1][j-1] = 'C' } }
         } else if (j === 0) {
           if (boardCopy[i - 1][j] === 0 && playerBoardCopy[i - 1][j] !== 'C') { tileCoord = [String(i - 1) + String(j), ...tileCoord] }
           if (boardCopy[i][j + 1] === 0 && playerBoardCopy[i][j + 1] !== 'C') { tileCoord = [String(i) + String(j + 1), ...tileCoord] }
@@ -166,6 +178,8 @@ const Sapper = (props) => {
           if (typeof boardCopy[i - 1][j] === 'number') { if (playerBoardCopy[i - 1][j] === '') { playerBoardCopy[i - 1][j] = 'C' } }
           if (typeof boardCopy[i][j + 1] === 'number') { if (playerBoardCopy[i][j + 1] === '') { playerBoardCopy[i][j + 1] = 'C' } }
           if (typeof boardCopy[i + 1][j] === 'number') { if (playerBoardCopy[i + 1][j] === '') { playerBoardCopy[i + 1][j] = 'C' } }
+          if (boardCopy[i-1][j+1] > 0) { if (playerBoardCopy[i-1][j+1] === '') { playerBoardCopy[i-1][j+1] = 'C' } }
+          if (boardCopy[i+1][j + 1] > 0) { if (playerBoardCopy[i+1][j + 1] === '') { playerBoardCopy[i+1][j + 1] = 'C' } }
         } else if (i === 9) {
           if (boardCopy[i][j - 1] === 0 && playerBoardCopy[i][j - 1] !== 'C') { tileCoord = [String(i - 1) + String(j - 1), ...tileCoord] }
           if (boardCopy[i - 1][j] === 0 && playerBoardCopy[i - 1][j] !== 'C') { tileCoord = [String(i - 1) + String(j), ...tileCoord] }
@@ -173,6 +187,8 @@ const Sapper = (props) => {
           if (typeof boardCopy[i][j - 1] === 'number') { if (playerBoardCopy[i][j - 1] === '') { playerBoardCopy[i][j - 1] = 'C' } }
           if (typeof boardCopy[i - 1][j] === 'number') { if (playerBoardCopy[i - 1][j] === '') { playerBoardCopy[i - 1][j] = 'C' } }
           if (typeof boardCopy[i][j + 1] === 'number') { if (playerBoardCopy[i][j + 1] === '') { playerBoardCopy[i][j + 1] = 'C' } }
+          if (boardCopy[i - 1][j-1] > 0) { if (playerBoardCopy[i - 1][j-1] === '') { playerBoardCopy[i - 1][j-1] = 'C' } }
+          if (boardCopy[i-1][j+1] > 0) { if (playerBoardCopy[i-1][j+1] === '') { playerBoardCopy[i-1][j+1] = 'C' } }
         } else {
           if (boardCopy[i - 1][j] === 0 && playerBoardCopy[i - 1][j] !== 'C') { tileCoord = [String(i - 1) + String(j), ...tileCoord] }
           if (boardCopy[i][j + 1] === 0 && playerBoardCopy[i][j + 1] !== 'C') { tileCoord = [String(i) + String(j + 1), ...tileCoord] }
@@ -182,6 +198,10 @@ const Sapper = (props) => {
           if (typeof boardCopy[i][j + 1] === 'number') { if (playerBoardCopy[i][j + 1] === '') { playerBoardCopy[i][j + 1] = 'C' } }
           if (typeof boardCopy[i + 1][j] === 'number') { if (playerBoardCopy[i + 1][j] === '') { playerBoardCopy[i + 1][j] = 'C' } }
           if (typeof boardCopy[i][j - 1] === 'number') { if (playerBoardCopy[i][j - 1] === '') { playerBoardCopy[i][j - 1] = 'C' } }
+          if (boardCopy[i - 1][j-1] > 0) { if (playerBoardCopy[i - 1][j-1] === '') { playerBoardCopy[i - 1][j-1] = 'C' } }
+          if (boardCopy[i-1][j+1] > 0) { if (playerBoardCopy[i-1][j+1] === '') { playerBoardCopy[i-1][j+1] = 'C' } }
+          if (boardCopy[i + 1][j-1] > 0) { if (playerBoardCopy[i + 1][j-1] === '') { playerBoardCopy[i + 1][j-1] = 'C' } }
+          if (boardCopy[i+1][j + 1] > 0) { if (playerBoardCopy[i+1][j + 1] === '') { playerBoardCopy[i+1][j + 1] = 'C' } }
         }
         if (playerBoardCopy[i][j] !== 'F') { playerBoardCopy[i][j] = 'C' }
       }
@@ -192,6 +212,9 @@ const Sapper = (props) => {
     }
   }
 
+  
+
+  //leftMB click
   const clickTileLB = (event) => {
     let boardCopy = [...board]
     let tileCoord = event.target.name
@@ -202,6 +225,7 @@ const Sapper = (props) => {
     }
   }
 
+  //rightMB click
   const clickTileRB = (event) => {
     event.preventDefault()
     let tileCoord = event.target.name
@@ -231,30 +255,31 @@ const Sapper = (props) => {
         setPlayerBoard(playerBoardCopy)
         setFlag(flags - 1)
       } else if (flags === 0) {
-        setNumberArea('You set too many flags')
+       setInfoBoard('You set too many flags')
         setTimeout(() => {
-          setNumberArea('')
+         setInfoBoard('')
         }, 3000)
       }
     }
   }
 
   const playerWin = () => {
-    setNumberArea('You Win!')
+   setInfoBoard('You Win!')
     setTimeout(() => {
       generateboard()
-      setNumberArea('')
+     setInfoBoard('')
     }, 3000)
 
   }
-  
+
   const playerLose = () => {
-    setNumberArea('You Lose')
+   setInfoBoard('You Lose')
     setTimeout(() => {
       generateboard()
-      setNumberArea('')
+     setInfoBoard('')
     }, 3000)
   }
+
   //check win condition
   useEffect(() => {
     let countC = 0;
@@ -264,26 +289,28 @@ const Sapper = (props) => {
     })
     if (bombs === 0 && countC === 0) { playerWin() }
   })
-  //start game after loading
-  useEffect(() => { if (props.sapper === true) {generateboard() }} )
+
+  //start game on componentDidMount
+  // eslint-disable-next-line
+  useEffect(() => { generateboard() }, [])
 
   return (
     <div className={style.calculator}>
-      <div className={style.numberArea} >
-        <textarea id='numberArea' value={numberArea}></textarea>
+      <div className={style.infoBoard} >
+        <textarea disabled readOnly id='infoBoard' value={infoBoard}></textarea>
       </div>
       <div className={style.tiles}>
-        {playerBoard.map((t, i, row) => row[i].map((tile, j) => { console.log('rerender')
+        {playerBoard.map((t, i, row) => row[i].map((tile, j) => {
           if ((playerBoard[i][j] === 'C') && (typeof board[i][j] === 'number')) { return <div className={style.checked} key={`${i}${j}`} name={`${i}${j}`} value={tile} >{board[i][j] > 0 ? board[i][j] : null}</div> }
           else if (playerBoard[i][j] === 'C') { return <div className={style.checked} key={`${i}${j}`} name={`${i}${j}`} value={tile} ></div> }
           else if (typeof playerBoard[i][j] === 'number') { return <div className={style.checked} key={`${i}${j}`} name={`${i}${j}`} value={tile}>{tile}</div> }
           else if (playerBoard[i][j] === 'F') { return <img src={flagImg} alt='flag' className={style.flag} key={`${i}${j}`} name={`${i}${j}`} value={tile} onContextMenu={clickTileRB}></img> }
           else if (playerBoard[i][j] === '') { return <button className={style.hidden} key={`${i}${j}`} name={`${i}${j}`} value={tile} onClick={clickTileLB} onContextMenu={clickTileRB}>{tile}</button> }
-        return ''}))
+          return ''
+        }))
         }
       </div>
-      <div><button onClick={() => { props.sapperToggle(false) }}>Get to work</button></div>
     </div>
   )
 }
-export default Sapper
+export default GameBoard

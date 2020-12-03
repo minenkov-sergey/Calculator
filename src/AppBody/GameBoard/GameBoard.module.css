@@ -11,26 +11,27 @@
   padding: 10px;
 }
 
-.numberArea {
+.infoBoard {
   grid-area: numberArea;
   display: inherit;
 }
 
-.numberArea textarea {
-  width: 98%;
+.infoBoard textarea {
+  resize: none;
+  width: 99%;
   font-size: 20px;
   text-align: right;
   color: black;
   background-color: #eff7ff;
+  border: 0px;
   border-radius: 4px;
-  margin-left: 1px;
 }
 
 .tiles {
   grid-area: tiles;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  grid-gap: 1px;
+  grid-gap: 2px;
 }
 
 .tiles button {
@@ -50,14 +51,14 @@
   color: rgb(12, 57, 206);
   border: solid 0px #007bff;
   border-radius: 3px;
-  margin-left: 2px;
+  margin-left: 0px;
 }
 
 .flag {
   height: 28px;
   width: 28px;
   padding: 1px;
-  padding-left: 2px;
+  padding-left: 0px;
 }
 
 .hidden {
@@ -70,7 +71,7 @@
   border: 0px;
   font-size: 0px;
   font-family: 'Times New Roman', Times, serif;
-  margin-left: 2px;
+  margin-left: 0px;
 }
 
 .hidden:hover {

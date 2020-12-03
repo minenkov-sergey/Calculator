@@ -1,6 +1,6 @@
 import React from 'react';
 import style from './App.module.css';
-import CalculatorBody from './AppBody/CalculatorBody'
+import GameBoard from './AppBody/GameBoard/GameBoard'
 
 
 const App = (props) => {
@@ -8,7 +8,8 @@ const App = (props) => {
   return (
 
     <div className={style.appWrapper}>
-      <CalculatorBody />
+      {/* <InfoBoard /> */}
+      <GameBoard />
     </div>
 
   );
